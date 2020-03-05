@@ -1,8 +1,238 @@
 <script>
-    import Hello from './HelloComponent/index.svelte'
-    import ByeBye from './ByeByeComponent/index.svelte'
-    export let name
+	import AutoComplete from './AutoComplete.svelte';
+
+	const pomes = ["Apple", "Chinese quince", "Chokeberry", "Cocky apple", "Eastern mayhaw", "Hawthorn", "Jagua", "Loquat", "Lovi-lovi", "Medlar", "Niedzwetzky's apple", "Pear", "Quince", "Ramontchi", "Rose hip", "Rowan", "Sapodilla", "Scarlet firethorn", "Serviceberry", "Shipova", "Sorb", "Southern crabapple", "Toyon"];
+	const drupes = ["Açaí", "Acerola", "African mango", "African mangosteen", "African oil palm fruit", "Alaskan bunchberry", "Ambarella", "American oil palm fruit", "American plum", "Apricot", "Bambangan", "Beach plum", "Bignay", "Binjai", "Black cherry", "Bolivian mountain coconut", "Brush cherry", "Bush butter fruit", "Canadian bunchberry", "Casimiroa", "Cedar bay cherry", "Changunga", "Cherry", "Cherry elaeagnus", "Cherry of the rio grande", "Chinese date", "Choke cherry", "Cocoplum", "Coconut", "Cornelian cherry", "Country-almond", "Creek plum", "Crowberry", "Curry berry", "Damson", "Date", "Desert quandong", "Emblic", "Emu apple", "Engkala", "Fibrous satinash", "Flatwoods plum", "Gomortega", "Greengage", "Green plum", "Guavaberry", "Gubinge", "Hairless rambutan", "Jambolan", "Jelly palm fruit", "Jocote", "Jujube", "Kelsey plum", "King coconut", "Korlan", "Little gooseberry", "Longan", "Lychee", "Malay rose apple", "Mamey sapote", "Mango", "Maprang", "Marula", "Miracle fruit", "Moriche palm fruit", "Nectarine", "Neem", "Nepali hog plum", "Nutmeg", "Otaheite gooseberry", "Peach", "Peanut butter fruit", "Pequi", "Pigeon plum", "Pili", "Pitanga", "Plum", "Pulasan", "Rambutan", "Red bush apple", "Riberry", "Sageretia", "Saw palmetto fruit", "Sea coconut", "Shoebutton ardisia", "Silver buffaloberry", "Sloe", "Spanish cherry", "Spanish lime", "Tamarind-plum", "Velvet tamarind", "Watery rose apple", "Wax apple", "Wild peach", "Wongi", "Yangmei", "Yellow plum", "Zwetschge"];
+
+	const testData = [
+		...pomes,
+		...drupes,
+		'Tags: <b>bold?</b>',
+	].sort();
+
+	const delayedData = () => new Promise(res => setTimeout(() => res(testData), 1000));
+
+	let dataPromise = null
+	const delayedDataCached = () => dataPromise == null
+		? dataPromise = new Promise(res => setTimeout(() => res(testData), 1000))
+		: dataPromise;
+
+	let initalSearch = 'apple';
+
+	let key = '';
+	let value = '';
+	let cursor = 0;
+
+	const wholeWordRegex = search => RegExp('\\b' + search + '\\b', 'iu');
+
+	const regExpEscape = s =>
+		s.replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&");
+		
+	const looseSearch = search => {
+		const any = '(.*?)';
+		const regex = RegExp(
+			any +
+			search
+				.split('')
+				.map(regExpEscape)
+				.map(c => `(${c})`)
+				.join(any) +
+			any,
+			'i');
+
+		return text => {
+			const matches = text.match(regex);
+			if (matches == null)
+				return { matches: false, highlights: [] };
+
+			let index = 0;
+			const highlights = [];
+			matches
+				.slice(1) // First is whole match
+				.forEach((m, i) => {
+					if (i % 2 == 1) {
+						highlights.push([index, index + m.length])
+					}
+
+					index += m.length;
+				});
+
+			return {
+				matches: highlights.length > 0,
+				highlights,
+			};
+		};
+	}
 </script>
 
-<Hello {name} />
-<ByeBye {name} />
+<style>
+	:global(html, body) {
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		height: 100%;
+		background: #333;
+		color: #ddd;
+	}
+
+	.root {
+		padding: 10px;
+	}
+	
+	.grid {
+		display: inline-grid;
+		grid-template-columns: max-content minmax(250px, max-content);
+		grid-column-gap: 5px;
+		grid-row-gap: 7px;
+		
+		--bh-autocomplete-input-color: #eee;
+		--bh-autocomplete-input-background: #444;
+		--bh-autocomplete-input-border: none;
+		--bh-autocomplete-input-padding: 3px;
+		--bh-autocomplete-input-margin: 0;
+
+		--bh-autocomplete-dropdown-color: var(--bh-autocomplete-input-color);
+		--bh-autocomplete-dropdown-background: var(--bh-autocomplete-input-background);
+		--bh-autocomplete-dropdown-box-shadow: 0px 2px 5px hsla(0, 0%, 100%, 0.2);
+		
+		--bh-autocomplete-result-match-color: hsl(210, 100%, 74%);
+		--bh-autocomplete-result-highlighted-background: #555;
+	}
+
+	div[title] {
+		border-bottom: 1px dashed #eee;
+	}
+
+	.theming {
+		--color: hsl(60, 94%, 65%);
+		--bh-autocomplete-input-color: var(--color);
+		--bh-autocomplete-input-background: #444;
+		--bh-autocomplete-input-border: none;
+		--bh-autocomplete-input-border-radius: 10px;
+		--bh-autocomplete-input-padding: 5px 10px;
+		--bh-autocomplete-input-margin: 0;
+
+		--bh-autocomplete-dropdown-padding: 5px;
+		--bh-autocomplete-dropdown-border-radius: 5px;
+		--bh-autocomplete-dropdown-box-shadow: 0px 2px 5px hsla(0, 0%, 100%, 0.2);
+		
+		--bh-autocomplete-result-margin: 5px 0 0 0;
+		--bh-autocomplete-result-match-color: var(--color);
+		--bh-autocomplete-result-border: transparent 1px solid;
+		--bh-autocomplete-result-highlighted-border: var(--color) 1px solid;
+		--bh-autocomplete-result-highlighted-background: none;
+		--bh-autocomplete-result-highlighted-border-radius: 10px;
+	}
+</style>
+
+<div class="root">
+	<h1>Autocomplete Component</h1>
+
+	<div class="grid">
+		<div>Simple</div>
+		<AutoComplete
+			items={() => testData}
+			fromStart={false}/>
+
+		<div>
+			<label for="labeled">Labeled input (click this)</label>
+		</div>
+		<AutoComplete id="labeled"
+			items={() => testData}
+			fromStart={false}/>
+
+		<div>From start</div>
+		<AutoComplete
+			items={() => testData}
+			fromStart={true}/>
+		
+		<div>Case sensitive</div>
+		<AutoComplete
+			items={() => testData}
+			caseSensitive={true}
+			fromStart={false}/>
+		
+		<div title={wholeWordRegex.toString()}>Custom regex (whole word)</div>
+		<AutoComplete
+			items={() => testData}
+			searchRegEx={wholeWordRegex}
+			fromStart={false}/>
+
+		<div title={looseSearch.toString()}>Custom search (very loose)</div>
+		<AutoComplete
+			items={() => testData}
+			searchFunction={looseSearch}
+			fromStart={false}/>
+
+		<div>Debounced</div>
+		<AutoComplete
+			items={() => testData}
+			debounce={300}
+			fromStart={false}/>
+
+		<div>Initial search</div>
+		<AutoComplete
+			search={initalSearch}
+			items={() => testData}
+			fromStart={false}/>
+
+		<div>Lazy dropdown DOM</div>
+		<AutoComplete
+			items={() => testData}
+			lazyDropdown={true}
+			fromStart={false}/>
+
+
+		<div>Max items = 10</div>
+		<AutoComplete
+			items={() => testData}
+			maxItems={10}
+			fromStart={false}/>
+
+		<div>Min char = 1</div>
+		<AutoComplete
+			items={() => testData}
+			minChar={1}
+			fromStart={false}/>
+
+		<div>Item selected event</div>
+		<AutoComplete
+			items={() => testData}
+			on:item-selected={e => alert(e.detail)}
+			fromStart={false}/>
+			
+		<div>Key/value bindings</div>
+		<div>
+			<AutoComplete
+				items={() => testData.map(x => ({ key: x, value: x.toLowerCase().replace(/ /g, '-') }))}
+				bind:key bind:value
+				fromStart={false}/>
+			<div>key: {key}, value: {value}</div>
+		</div>
+
+		<div>Async, cached</div>
+		<AutoComplete
+			items={delayedDataCached}
+			fromStart={false}/>
+
+		<div>Async, uncached, debounced</div>
+		<AutoComplete
+			items={delayedData}
+			debounce={300}
+			fromStart={false}/>
+
+		<div>Async, initial search</div>
+		<AutoComplete
+			search={initalSearch}
+			items={delayedData}
+			fromStart={false}/>
+
+		<div>Theming</div>
+		<div class="theming">
+			<AutoComplete
+				items={() => testData}
+				search={initalSearch}
+				fromStart={false}/>
+		</div>
+	</div>
+</div>
