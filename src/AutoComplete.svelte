@@ -45,6 +45,8 @@
 	export let isLoading = false;
 	/** Currently highlighted list item index. */
 	export let cursor = 0;
+	/** Currently highlighted list item. */
+	export let cursorItem;
 	/** Maximum number of items to show in list at a time. */
 	export let maxItems = undefined;
 	/** Whether the search string has to appear at the start of the item. */
@@ -73,7 +75,7 @@
 
 	/**
 	 * Custom search function.
-	 * If set, `fromStart` and `caseSensitive` will not be used.
+	 * If set, `fromStart`, `caseSensitive` and `searchRegEx` will not be used.
 	 * {@type (search: string) => (text: string) => {
 	 *     matches: boolean,
 	 *     highlights: [number, number][], // Array of start and end index tuples
@@ -129,6 +131,8 @@
 			});
 	}
 
+	$: cursorItem = results[cursor];
+
 	let debounceHandle = undefined;
 
 	onDestroy(() => clearTimeout(debounceHandle));
@@ -161,6 +165,10 @@
 	};
 	
 	function onInput() {
+		queueQuery();
+	}
+
+	function queueQuery() {
 		if (search.length >= minChar) {
 			clearTimeout(debounceHandle);
 			debounceHandle = setTimeout(runQuery, debounce);
@@ -222,11 +230,7 @@
 	}
 
 	function onFocus(event) {
-		if (search.length >= minChar)
-			open();
-
-		if (hasSearched == false)
-			onInput();
+		activate();
 
 		dispatch(event.type, event);
 	}
@@ -235,6 +239,20 @@
 		isOpen = false;
 
 		dispatch(event.type, event);
+	}
+
+	function onClick(event) {
+		activate();
+
+		dispatch(event.type, event);
+	}
+
+	function activate() {
+		if (search.length >= minChar)
+			open();
+
+		if (hasSearched == false)
+			queueQuery();
 	}
 
 	function onItemClick(event, index) {
@@ -379,8 +397,7 @@
 		white-space: nowrap;
 	}
 
-	.autocomplete-result.is-active,
-	.autocomplete-result:hover {
+	.autocomplete-result.is-active {
 		color: var(--ac-result-highlighted-color, var(--ac-result-color));
 		background: var(--ac-result-highlighted-background, var(--ac-result-background));
 		border: var(--ac-result-highlighted-border, var(--ac-result-border));
@@ -414,6 +431,7 @@
 		on:input={onInput}
 		on:focus={onFocus}
 		on:blur={onBlur}
+		on:click={onClick}
 		on:keydown={onKeyDown}>
 
 	{#if lazyDropdown == false || isOpen}
@@ -429,7 +447,8 @@
 				{#each resultListItems as result, i}
 					<li on:mousedown={e => onItemClick(e, i)}
 						class="autocomplete-result"
-						class:is-active={i === cursor}>
+						class:is-active={i === cursor}
+						on:mousemove={() => cursor = i}>
 						{@html result.label}
 					</li>
 				{/each}

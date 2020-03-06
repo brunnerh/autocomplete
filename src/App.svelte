@@ -10,6 +10,13 @@
 		'Tags: <b>bold?</b>',
 	].sort();
 
+	const testDataWithValue = testData.map(x => ({
+		key: x,
+		value: x.toLowerCase()
+			.replace(/\W+/g, '-')
+			.replace(/(^-|-$)/g, ''),
+	}));
+
 	const delayedData = () => new Promise(res => setTimeout(() => res(testData), 1000));
 
 	let dataPromise = null
@@ -21,7 +28,9 @@
 
 	let key = '';
 	let value = '';
+
 	let cursor = 0;
+	let cursorItem;
 
 	const wholeWordRegex = search => RegExp('\\b' + search + '\\b', 'iu');
 
@@ -101,6 +110,10 @@
 
 	div[title] {
 		border-bottom: 1px dashed #eee;
+	}
+
+	.json {
+		white-space: pre;
 	}
 
 	.theming {
@@ -203,11 +216,22 @@
 			
 		<div>Key/value bindings</div>
 		<div>
+			<div>key: {key}</div>
+			<div>value: {value}</div>
 			<AutoComplete
-				items={() => testData.map(x => ({ key: x, value: x.toLowerCase().replace(/ /g, '-') }))}
+				items={() => testDataWithValue}
 				bind:key bind:value
 				fromStart={false}/>
-			<div>key: {key}, value: {value}</div>
+		</div>
+
+		<div>Cursor and cursor item bindings</div>
+		<div>
+			<div>cursor: {cursor}</div>
+			<div class="json">cursorItem: {JSON.stringify(cursorItem, 0, 4)}</div>
+			<AutoComplete
+				items={() => testDataWithValue}
+				bind:cursor bind:cursorItem
+				fromStart={false}/>
 		</div>
 
 		<div>Async, cached</div>
