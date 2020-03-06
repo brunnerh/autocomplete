@@ -6,7 +6,7 @@
 	const regExpEscape = s =>
 		s.replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&");
 	const htmlEscape = s =>
-		s.replace(/[\u00A0-\u9999<>"&]/gim, i => '&#' + i.charCodeAt(0) + ';');
+		s.replace(/[\u00A0-\u9999<>"&]/gim, i => `&#${i.charCodeAt(0)};`);
 
 	/** `id` attribute of the input element. */
 	export let id = null;
@@ -46,7 +46,7 @@
 	/** Currently highlighted list item index. */
 	export let cursor = 0;
 	/** Currently highlighted list item. */
-	export let cursorItem;
+	export let cursorItem = undefined;
 	/** Maximum number of items to show in list at a time. */
 	export let maxItems = undefined;
 	/** Whether the search string has to appear at the start of the item. */
@@ -59,6 +59,11 @@
 	export let minChar = 0;
 	/** Time to wait in milliseconds before triggering a search. */
 	export let debounce = 0;
+	/**
+	 * Sets whether suggested items are directly selected upon
+	 * arrow up/down while the dropdown is closed.
+	 */
+	export let blindSelection = true;
 
 	/**
 	 * Whether the DOM elements for the list are only created
@@ -84,6 +89,7 @@
 	export let searchFunction = null;
 
 	let input;
+	let dropdownElement;
 	let hasSearched = false;
 
 	let resultListItems = [];
@@ -206,20 +212,31 @@
 				event.preventDefault();
 				if (cursor < results.length - 1)
 					cursor =  cursor + 1;
+
+				if (blindSelection && isOpen == false)
+					select(cursor);
 				break;
 
 			case 'ArrowUp':
 				event.preventDefault();
 				if (cursor > 0)
 					cursor =  cursor - 1;
+
+				if (blindSelection && isOpen == false)
+					select(cursor);
 				break;
 
 			case 'Enter':
 				event.preventDefault()
-				if (cursor === -1) {
-					cursor = 0;
+				if (isOpen) {
+					if (cursor === -1) {
+						cursor = 0;
+					}
+					select(cursor);
 				}
-				select(cursor);
+				else {
+					activate();
+				}
 				break;
 
 			case 'Escape':
@@ -291,6 +308,25 @@
 		close();
 
 		dispatch('item-selected', results[cursor]);
+	}
+
+	function autoScrollIntoView(item, { viewport }) {
+		return {
+			update: async () => {
+				await tick();
+
+				if (item.classList.contains('is-active') == false)
+					return;
+				
+				const itemRect = item.getBoundingClientRect();
+				const viewportRect = viewport.getBoundingClientRect();
+				if (itemRect.top < viewportRect.top)
+					viewport.scrollTop = item.offsetTop;
+				else if (itemRect.bottom > viewportRect.bottom)
+					viewport.scrollTop = item.offsetTop -
+						viewport.clientHeight + itemRect.height;
+			}
+		} 
 	}
 </script>
 
@@ -435,11 +471,12 @@
 		on:keydown={onKeyDown}>
 
 	{#if lazyDropdown == false || isOpen}
-		<div class="autocomplete-results-dropdown"
+		<div bind:this={dropdownElement} 
+			class="autocomplete-results-dropdown"
 			class:hidden={!isOpen}>
 			{#if isLoading}
 				<div class="autocomplete-loading">
-					<slot>Loading data...</slot>
+					<slot name="loading">Loading data...</slot>
 				</div>
 			{/if}
 
@@ -448,7 +485,8 @@
 					<li on:mousedown={e => onItemClick(e, i)}
 						class="autocomplete-result"
 						class:is-active={i === cursor}
-						on:mousemove={() => cursor = i}>
+						on:mousemove={() => cursor = i}
+						use:autoScrollIntoView={{ cursor, viewport: dropdownElement }}>
 						{@html result.label}
 					</li>
 				{/each}
