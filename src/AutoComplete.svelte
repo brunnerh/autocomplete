@@ -260,7 +260,6 @@
 			return;
 
 		isOpen = false;
-		input.blur();
 	}
 
 	function select() {
@@ -279,40 +278,40 @@
 
 <style>
 	:global(:root) {
-		--bh-autocomplete-input-color: black;
-		--bh-autocomplete-input-background: white;
-		--bh-autocomplete-input-border: none;
-		--bh-autocomplete-input-border-radius: 0;
-		--bh-autocomplete-input-padding: 3px;
-		--bh-autocomplete-input-margin: 0;
-		--bh-autocomplete-input-font-size: small;
-		--bh-autocomplete-input-font-weight: normal;
+		--ac-input-color: black;
+		--ac-input-background: white;
+		--ac-input-border: none;
+		--ac-input-border-radius: 0;
+		--ac-input-padding: 3px;
+		--ac-input-margin: 0;
+		--ac-input-font-size: small;
+		--ac-input-font-weight: normal;
 
-		--bh-autocomplete-dropdown-box-shadow: 0px 2px 5px hsla(0, 0%, 0%, 0.7);
-		--bh-autocomplete-dropdown-margin: 0;
-		--bh-autocomplete-dropdown-padding: 0;
-		--bh-autocomplete-dropdown-border-radius: 0;
+		--ac-dropdown-box-shadow: 0px 2px 5px hsla(0, 0%, 0%, 0.7);
+		--ac-dropdown-margin: 0;
+		--ac-dropdown-padding: 0;
+		--ac-dropdown-border-radius: 0;
 
-		--bh-autocomplete-loading-color: inherit;
-		--bh-autocomplete-loading-background: none;
-		--bh-autocomplete-loading-padding: 0;
-		--bh-autocomplete-loading-margin: 5px;
+		--ac-loading-color: inherit;
+		--ac-loading-background: none;
+		--ac-loading-padding: 0;
+		--ac-loading-margin: 5px;
 
-		--bh-autocomplete-result-color: inherit;
-		--bh-autocomplete-result-background: none;
-		--bh-autocomplete-result-border: none;
-		--bh-autocomplete-result-margin: 0;
-		--bh-autocomplete-result-padding: 0.2em 0.5em;
-		--bh-autocomplete-result-border-radius: 0;
+		--ac-result-color: inherit;
+		--ac-result-background: none;
+		--ac-result-border: none;
+		--ac-result-margin: 0;
+		--ac-result-padding: 0.2em 0.5em;
+		--ac-result-border-radius: 0;
 
-		--bh-autocomplete-result-highlighted-color: inherit;
-		--bh-autocomplete-result-highlighted-background: #dbdbdb;
+		--ac-result-highlighted-color: inherit;
+		--ac-result-highlighted-background: #dbdbdb;
 
-		--bh-autocomplete-result-match-color: inherit;
-		--bh-autocomplete-result-match-background: none;
-		--bh-autocomplete-result-match-border-radius: 0;
-		--bh-autocomplete-result-match-font-weight: bold;
-		--bh-autocomplete-result-match-font-style: inherit;
+		--ac-result-match-color: inherit;
+		--ac-result-match-background: none;
+		--ac-result-match-border-radius: 0;
+		--ac-result-match-font-weight: bold;
+		--ac-result-match-font-style: inherit;
 	}
 
 	* {
@@ -321,14 +320,14 @@
 
 	input {
 		width: 100%;
-		color: var(--bh-autocomplete-input-color);
-		background: var(--bh-autocomplete-input-background);
-		border: var(--bh-autocomplete-input-border);
-		border-radius: var(--bh-autocomplete-input-border-radius);
-		padding: var(--bh-autocomplete-input-padding);
-		margin: var(--bh-autocomplete-input-margin);
-		font-size: var(--bh-autocomplete-input-font-size);
-		font-weight: var(--bh-autocomplete-input-font-weight);
+		color: var(--ac-input-color);
+		background: var(--ac-input-background);
+		border: var(--ac-input-border);
+		border-radius: var(--ac-input-border-radius);
+		padding: var(--ac-input-padding);
+		margin: var(--ac-input-margin);
+		font-size: var(--ac-input-font-size);
+		font-weight: var(--ac-input-font-weight);
 	}
 
 	.autocomplete {
@@ -340,10 +339,10 @@
 	}
 
 	.autocomplete-loading {
-		color: var(--bh-autocomplete-loading-color);
-		background: var(--bh-autocomplete-loading-background);
-		padding: var(--bh-autocomplete-loading-padding);
-		margin: var(--bh-autocomplete-loading-margin);
+		color: var(--ac-loading-color);
+		background: var(--ac-loading-background);
+		padding: var(--ac-loading-padding);
+		margin: var(--ac-loading-margin);
 	}
 
 	.autocomplete-results-dropdown {
@@ -353,12 +352,12 @@
 		overflow: auto;
 		width: 100%;
 
-		color: var(--bh-autocomplete-dropdown-color, var(--bh-autocomplete-input-color));
-		background: var(--bh-autocomplete-dropdown-background, var(--bh-autocomplete-input-background));
-		box-shadow: var(--bh-autocomplete-dropdown-box-shadow);
-		margin: var(--bh-autocomplete-dropdown-margin);
-		padding: var(--bh-autocomplete-dropdown-padding);
-		border-radius: var(--bh-autocomplete-dropdown-border-radius);
+		color: var(--ac-dropdown-color, var(--ac-input-color));
+		background: var(--ac-dropdown-background, var(--ac-input-background));
+		box-shadow: var(--ac-dropdown-box-shadow);
+		margin: var(--ac-dropdown-margin);
+		padding: var(--ac-dropdown-padding);
+		border-radius: var(--ac-dropdown-border-radius);
 	}
 
 	.autocomplete-results-list {
@@ -367,12 +366,12 @@
 	}
 
 	.autocomplete-result {
-		color: var(--bh-autocomplete-result-color);
-		background: var(--bh-autocomplete-result-background);
-		border: var(--bh-autocomplete-result-border);
-		margin: var(--bh-autocomplete-result-margin);
-		padding: var(--bh-autocomplete-result-padding);
-		border-radius: var(--bh-autocomplete-result-border-radius);
+		color: var(--ac-result-color);
+		background: var(--ac-result-background);
+		border: var(--ac-result-border);
+		margin: var(--ac-result-margin);
+		padding: var(--ac-result-padding);
+		border-radius: var(--ac-result-border-radius);
 
 		list-style: none;
 		text-align: left;
@@ -382,20 +381,20 @@
 
 	.autocomplete-result.is-active,
 	.autocomplete-result:hover {
-		color: var(--bh-autocomplete-result-highlighted-color, var(--bh-autocomplete-result-color));
-		background: var(--bh-autocomplete-result-highlighted-background, var(--bh-autocomplete-result-background));
-		border: var(--bh-autocomplete-result-highlighted-border, var(--bh-autocomplete-result-border));
-		margin: var(--bh-autocomplete-result-highlighted-margin, var(--bh-autocomplete-result-margin));
-		padding: var(--bh-autocomplete-result-highlighted-padding, var(--bh-autocomplete-result-padding));
-		border-radius: var(--bh-autocomplete-result-highlighted-border-radius, var(--bh-autocomplete-result-border-radius));
+		color: var(--ac-result-highlighted-color, var(--ac-result-color));
+		background: var(--ac-result-highlighted-background, var(--ac-result-background));
+		border: var(--ac-result-highlighted-border, var(--ac-result-border));
+		margin: var(--ac-result-highlighted-margin, var(--ac-result-margin));
+		padding: var(--ac-result-highlighted-padding, var(--ac-result-padding));
+		border-radius: var(--ac-result-highlighted-border-radius, var(--ac-result-border-radius));
 	}
 
 	.autocomplete-result > :global(.autocomplete-result-match) {
-		color: var(--bh-autocomplete-result-match-color);
-		background: var(--bh-autocomplete-result-match-background);
-		font-weight: var(--bh-autocomplete-result-match-font-weight);
-		font-style: var(--bh-autocomplete-result-match-font-style);
-		border-radius: var(--bh-autocomplete-result-match-border-radius);
+		color: var(--ac-result-match-color);
+		background: var(--ac-result-match-background);
+		font-weight: var(--ac-result-match-font-weight);
+		font-style: var(--ac-result-match-font-style);
+		border-radius: var(--ac-result-match-border-radius);
 	}
 </style>
 

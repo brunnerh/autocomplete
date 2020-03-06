@@ -85,18 +85,18 @@
 		grid-column-gap: 5px;
 		grid-row-gap: 7px;
 		
-		--bh-autocomplete-input-color: #eee;
-		--bh-autocomplete-input-background: #444;
-		--bh-autocomplete-input-border: none;
-		--bh-autocomplete-input-padding: 3px;
-		--bh-autocomplete-input-margin: 0;
+		--ac-input-color: #eee;
+		--ac-input-background: #444;
+		--ac-input-border: none;
+		--ac-input-padding: 3px;
+		--ac-input-margin: 0;
 
-		--bh-autocomplete-dropdown-color: var(--bh-autocomplete-input-color);
-		--bh-autocomplete-dropdown-background: var(--bh-autocomplete-input-background);
-		--bh-autocomplete-dropdown-box-shadow: 0px 2px 5px hsla(0, 0%, 100%, 0.2);
+		--ac-dropdown-color: var(--ac-input-color);
+		--ac-dropdown-background: var(--ac-input-background);
+		--ac-dropdown-box-shadow: 0px 2px 5px hsla(0, 0%, 100%, 0.2);
 		
-		--bh-autocomplete-result-match-color: hsl(210, 100%, 74%);
-		--bh-autocomplete-result-highlighted-background: #555;
+		--ac-result-match-color: hsl(210, 100%, 74%);
+		--ac-result-highlighted-background: #555;
 	}
 
 	div[title] {
@@ -105,23 +105,23 @@
 
 	.theming {
 		--color: hsl(60, 94%, 65%);
-		--bh-autocomplete-input-color: var(--color);
-		--bh-autocomplete-input-background: #444;
-		--bh-autocomplete-input-border: none;
-		--bh-autocomplete-input-border-radius: 10px;
-		--bh-autocomplete-input-padding: 5px 10px;
-		--bh-autocomplete-input-margin: 0;
+		--ac-input-color: var(--color);
+		--ac-input-background: #444;
+		--ac-input-border: none;
+		--ac-input-border-radius: 10px;
+		--ac-input-padding: 5px 10px;
+		--ac-input-margin: 0;
 
-		--bh-autocomplete-dropdown-padding: 5px;
-		--bh-autocomplete-dropdown-border-radius: 5px;
-		--bh-autocomplete-dropdown-box-shadow: 0px 2px 5px hsla(0, 0%, 100%, 0.2);
+		--ac-dropdown-padding: 5px;
+		--ac-dropdown-border-radius: 5px;
+		--ac-dropdown-box-shadow: 0px 2px 5px hsla(0, 0%, 100%, 0.2);
 		
-		--bh-autocomplete-result-margin: 5px 0 0 0;
-		--bh-autocomplete-result-match-color: var(--color);
-		--bh-autocomplete-result-border: transparent 1px solid;
-		--bh-autocomplete-result-highlighted-border: var(--color) 1px solid;
-		--bh-autocomplete-result-highlighted-background: none;
-		--bh-autocomplete-result-highlighted-border-radius: 10px;
+		--ac-result-margin: 5px 0 0 0;
+		--ac-result-match-color: var(--color);
+		--ac-result-border: transparent 1px solid;
+		--ac-result-highlighted-border: var(--color) 1px solid;
+		--ac-result-highlighted-background: none;
+		--ac-result-highlighted-border-radius: 10px;
 	}
 </style>
 
