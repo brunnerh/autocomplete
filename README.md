@@ -4,6 +4,12 @@ An autocomplete component which can be used as a regular ES module import or as 
 
 It has no dependencies, handles synchronous and asynchronous data sources and escapes any HTML automatically.
 
+## Install
+
+```
+npm install @brunnerh/autocomplete
+```
+
 ## Usage
 
 In a *Svelte* project the component can be imported in a `<script>` section and then used in the HTML like any other:

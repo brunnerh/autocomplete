@@ -1,6 +1,6 @@
 {
     "name": "@brunnerh/autocomplete",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "A autocomplete component.",
     "author": "brunnerh",
     "license": "MIT",
@@ -16,7 +16,7 @@
         "webserver": "sirv public --single --dev",
         "dev": "run-p webserver watch:dev",
         "test": "npx nightwatch",
-        "prepack": "npm run build:prod"
+        "prepublishOnly": "npm run build:prod"
     },
     "dependencies": {},
     "devDependencies": {
