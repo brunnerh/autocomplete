@@ -18,6 +18,8 @@
 	export let key = '';
 	/** Placeholder text. */
 	export let placeholder = '';
+	/** Title attribute text. */
+	export let title = null;
 	/** Whether the input is required. */
 	export let required = false;
 	/** Whether the input is disabled. */
@@ -517,12 +519,9 @@
 		results
 	}}>
 	<input bind:this={input} type="text"
-		{id}
-		class={className}
-		{name}
-		{placeholder}
-		{required}
-		{disabled}
+		{id} class={className} {name}
+		{placeholder} {title}
+		{required} {disabled}
 		autocomplete={name}
 		bind:value={search}
 		on:input={onInput}
