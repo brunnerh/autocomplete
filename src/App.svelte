@@ -259,4 +259,37 @@
 				fromStart={false}/>
 		</div>
 	</div>
+
+	<hr/>
+
+	<h2>Svelte Slots</h2>
+
+	<div class="grid">
+		<div>loading</div>
+		<div>
+			<AutoComplete
+				items={delayedData}
+				search={initalSearch}
+				fromStart={false}>
+				<div slot="loading" style="color: hsl(300, 100%, 85%)">
+					[loading, 1, 2, 3...]
+				</div>
+			</AutoComplete>
+		</div>
+
+		<div>template</div>
+		<div>
+			<AutoComplete let:result
+				items={() => testDataWithValue}
+				search={initalSearch}
+				fromStart={false}>
+				<div slot="template">
+					<span style="color: hsl(120, 100%, 70%)">{result.index + 1}</span>:
+					{@html result.label}
+					<br/>
+					<span style="font-size: smaller; opacity: 0.7">({result.value})</span>
+				</div>
+			</AutoComplete>
+		</div>
+	</div>
 </div>

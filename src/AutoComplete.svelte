@@ -116,7 +116,7 @@
 		const matcher = effectiveSearchFunction(search);
 
 		resultListItems = results
-			.map(item => {
+			.map((item, index) => {
 				const text = typeof item !== 'string' ? item.key : item;
 				
 				const { matches, highlights } = matcher(text);
@@ -137,6 +137,7 @@
 				parts.push(htmlEscape(tail));
 
 				return {
+					index,
 					key: text,
 					value: item.value || item,
 					label: parts.join(''),
@@ -487,7 +488,7 @@
 		border-radius: var(--ac-result-highlighted-border-radius, var(--ac-result-border-radius));
 	}
 
-	.autocomplete-result > :global(.autocomplete-result-match) {
+	.autocomplete-result :global(.autocomplete-result-match) {
 		color: var(--ac-result-match-color);
 		background: var(--ac-result-match-background);
 		font-weight: var(--ac-result-match-font-weight);
@@ -532,17 +533,19 @@
 			{/if}
 
 			<ul class="autocomplete-results-list">
-				{#each resultListItems as result, i}
-					<li on:mousedown={e => onItemClick(e, i)}
+				{#each resultListItems as result, index (result.key)}
+					<li on:mousedown={e => onItemClick(e, index)}
 						class="autocomplete-result"
-						class:is-active={i === cursor}
-						on:mousemove={() => cursor = i}
+						class:is-active={index === cursor}
+						on:mousemove={() => cursor = index}
 						use:autoScrollItem={{
 							viewport: () => dropdownElement,
-							condition: () => i === cursor,
+							condition: () => index === cursor,
 							isOpen,
 						}}>
-						{@html result.label}
+						<slot name="template" {result}>
+							{@html result.label}
+						</slot>
 					</li>
 				{/each}
 			</ul>
