@@ -15,7 +15,8 @@
         "watch:dev": "rollup -c rollup.config.dev.js -w",
         "webserver": "sirv public --single --dev",
         "dev": "run-p webserver watch:dev",
-        "test": "npx nightwatch"
+        "test": "npx nightwatch",
+        "prepack": "npm run build:prod"
     },
     "dependencies": {},
     "devDependencies": {
@@ -36,6 +37,7 @@
         "component"
     ],
     "files": [
-        "src"
+        "src",
+        "dist"
     ]
 }

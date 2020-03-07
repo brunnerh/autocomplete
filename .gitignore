@@ -8,3 +8,4 @@ todo.md
 node_modules
 logs
 *.log
+*.tgz
