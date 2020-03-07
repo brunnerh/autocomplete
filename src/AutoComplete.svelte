@@ -490,7 +490,7 @@
 		white-space: nowrap;
 	}
 
-	.autocomplete-result.is-active {
+	.autocomplete-result.highlighted {
 		color: var(--ac-result-highlighted-color, var(--ac-result-color));
 		background: var(--ac-result-highlighted-background, var(--ac-result-background));
 		border: var(--ac-result-highlighted-border, var(--ac-result-border));
@@ -519,7 +519,8 @@
 		results
 	}}>
 	<input bind:this={input} type="text"
-		{id} class={className} {name}
+		{id} {name}
+		class="autocomplete-input {className}"
 		{placeholder} {title}
 		{required} {disabled}
 		autocomplete={name}
@@ -544,7 +545,7 @@
 				{#each resultListItems as result, index (result.key)}
 					<li on:mousedown={e => onItemClick(e, index)}
 						class="autocomplete-result"
-						class:is-active={index === cursor}
+						class:highlighted={index === cursor}
 						on:mousemove={() => cursor = index}
 						use:autoScrollItem={{
 							viewport: () => dropdownElement,

@@ -84,6 +84,13 @@
 		color: #ddd;
 	}
 
+	a {
+		color: yellow;
+	}
+	a:visited {
+		color: hsl(39, 100%, 50%);
+	}
+
 	.root {
 		padding: 10px;
 	}
@@ -270,6 +277,10 @@
 
 	<h2>Svelte Slots</h2>
 
+	<p>
+		Supported when using the component in a Svelte project.
+	</p>
+
 	<div class="grid">
 		<div>loading</div>
 		<div>
@@ -303,16 +314,20 @@
 
 	<h2>Component as ES Module</h2>
 
+	<p>
+		See "Client-side component API" in the <a href="https://svelte.dev/docs">Svelte docs.</a>
+	</p>
+
 	<div class="grid">
-		<div id="client-component-label">simple</div>
+		<div id="client-component-label">Example with select event</div>
 		<div id="client-component"></div>
 
 		<script type="module" id="es-code">
-			import { AutoComplete as AC } from '/autocomplete.js';
+			import { AutoComplete } from '/autocomplete.js';
 
 			const items = ['Apple', 'Orange', 'Pear'];
 
-			const ac = new AC({
+			const ac = new AutoComplete({
 				target: document.querySelector('#client-component'),
 				props: {
 					items: () => items,

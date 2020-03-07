@@ -8,9 +8,9 @@
     "main": "dist/autocomplete.js",
     "scripts": {
         "build:prod": "rollup -c rollup.config.prod.js",
-        "build:dev": "rollup -c rollup.config.dev.js -w",
+        "watch:dev": "rollup -c rollup.config.dev.js -w",
         "webserver": "sirv public --single --dev",
-        "dev": "run-p webserver build:dev",
+        "dev": "run-p webserver watch:dev",
         "test": "npx nightwatch"
     },
     "dependencies": {},
