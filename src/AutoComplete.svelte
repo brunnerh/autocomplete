@@ -22,6 +22,12 @@
 	export let required = false;
 	/** Whether the input is disabled. */
 	export let disabled = false;
+	/**
+	 * Automatically scrolls the component into view.
+	 * Can be helpful if the component is at the bottom a scrollable area
+	 * and the dropdown ends up off-screen.
+	 */
+	export let autoScroll = true;
 
 	/**
 	 * Gets a list of items that can be completed.
@@ -88,8 +94,9 @@
 	 */
 	export let searchFunction = null;
 
-	let input;
-	let dropdownElement;
+	let input = null;
+	let inputFocused = false;
+	let dropdownElement = null;
 	let hasSearched = false;
 
 	let resultListItems = [];
@@ -182,7 +189,9 @@
 	}
 
 	async function runQuery() {
-		open();
+		if (inputFocused)
+			open();
+
 		isLoading = true;
 		await filterResults(search);
 		isLoading = false;
@@ -211,7 +220,7 @@
 			case 'ArrowDown':
 				event.preventDefault();
 				if (cursor < results.length - 1)
-					cursor =  cursor + 1;
+					cursor = cursor + 1;
 
 				if (blindSelection && isOpen == false)
 					select(cursor);
@@ -247,12 +256,14 @@
 	}
 
 	function onFocus(event) {
+		inputFocused = true;
 		activate();
 
 		dispatch(event.type, event);
 	}
 
 	function onBlur(event) {
+		inputFocused = false;
 		isOpen = false;
 
 		dispatch(event.type, event);
@@ -310,21 +321,55 @@
 		dispatch('item-selected', results[cursor]);
 	}
 
-	function autoScrollIntoView(item, { viewport }) {
+	function autoScrollComponent(node, { condition, dropdown }) {
+		const autoScroll = () => {
+			if (condition() == false)
+				return;
+
+			const scrollFunction = 'scrollIntoViewIfNeeded' in Element.prototype
+				? Element.prototype.scrollIntoViewIfNeeded
+				: Element.prototype.scrollIntoView;
+
+			const dropdownNode = dropdown();
+			if (dropdownNode != null)
+				scrollFunction.call(dropdownNode);
+
+			scrollFunction.call(node);
+		};
+
+		autoScroll();
+
 		return {
 			update: async () => {
 				await tick();
 
-				if (item.classList.contains('is-active') == false)
-					return;
-				
-				const itemRect = item.getBoundingClientRect();
-				const viewportRect = viewport.getBoundingClientRect();
-				if (itemRect.top < viewportRect.top)
-					viewport.scrollTop = item.offsetTop;
-				else if (itemRect.bottom > viewportRect.bottom)
-					viewport.scrollTop = item.offsetTop -
-						viewport.clientHeight + itemRect.height;
+				autoScroll();
+			}
+		} 
+	}
+
+	function autoScrollItem(node, { viewport, condition }) {
+		const autoScroll = () => {
+			const viewportNode = viewport();
+			if (viewportNode == null || condition() == false)
+				return;
+			
+			const nodeRect = node.getBoundingClientRect();
+			const viewportRect = viewportNode.getBoundingClientRect();
+			if (nodeRect.top < viewportRect.top)
+				viewportNode.scrollTop = node.offsetTop;
+			else if (nodeRect.bottom > viewportRect.bottom)
+				viewportNode.scrollTop = node.offsetTop -
+					viewportNode.clientHeight + nodeRect.height;
+		}
+
+		autoScroll();
+
+		return {
+			update: async () => {
+				await tick();
+
+				autoScroll();
 			}
 		} 
 	}
@@ -454,7 +499,13 @@
 <svelte:window on:click="{() => close()}" />
 
 <div class="autocomplete"
-	on:click="{event => event.stopPropagation()}">
+	on:click="{event => event.stopPropagation()}"
+	use:autoScrollComponent={{
+		condition: () => autoScroll && isOpen,
+		dropdown: () => dropdownElement,
+		isOpen,
+		results
+	}}>
 	<input bind:this={input} type="text"
 		{id}
 		class={className}
@@ -486,7 +537,11 @@
 						class="autocomplete-result"
 						class:is-active={i === cursor}
 						on:mousemove={() => cursor = i}
-						use:autoScrollIntoView={{ cursor, viewport: dropdownElement }}>
+						use:autoScrollItem={{
+							viewport: () => dropdownElement,
+							condition: () => i === cursor,
+							isOpen,
+						}}>
 						{@html result.label}
 					</li>
 				{/each}
