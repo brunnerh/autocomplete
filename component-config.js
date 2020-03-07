@@ -3,12 +3,17 @@ import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import { terser } from 'rollup-plugin-terser';
 
-export function componentConfig(outputDirectory)
+/**
+ * Generates rollup config for standalone component module.
+ * @param {string} outputDirectory The output directory name.
+ * @param {boolean} minify Whether to minify output.
+ */
+export function componentConfig(outputDirectory, minify)
 {
 	return {
 		input: 'src/index.js',
 		output: {
-			file: `${outputDirectory}/autocomplete.js`,
+			file: `${outputDirectory}/autocomplete${minify ? '.min' : ''}.js`,
 			format: 'es',
 			name: 'autocomplete',
 		},
@@ -18,7 +23,7 @@ export function componentConfig(outputDirectory)
 			}),
 			resolve(),
 			commonjs(),
-			terser(),
+			minify ? terser() : undefined,
 		],
 	}
 };

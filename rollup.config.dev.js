@@ -22,5 +22,5 @@ export default [
 			commonjs(),
 		],
 	},
-	componentConfig('public'),
+	componentConfig('public', false),
 ]
