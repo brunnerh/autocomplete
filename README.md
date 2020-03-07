@@ -45,35 +45,35 @@ For documentation of how to interact with component instances see [Client-side c
 
 ### Properties
 
-| Prop               | Type                                | Default     | Description |
-|--------------------|-------------------------------------|-------------|-------------|
-| `id`               | `string | null`                     | `null`      | Sets the `id` of the input element. |
-| `name`             | `string | null`                     | `null`      | Sets the `name` of the input element. |
-| `className`        | `string`                            | `''`        | Sets additional class name/names of the input element (should be space separated). |
-| `placeholder`      | `string | null`                     | `null`      | Sets the `placeholder` of the input element. |
-| `title`            | `string | null`                     | `null`      | Sets the `title` of the input element. |
-| `required`         | `boolean`                           | `false`     | Sets the `required` attribute on the input element if `true`. |
-| `disabled`         | `boolean`                           | `false`     | Sets the `disabled` attribute on the input element if `true`. |
-| `autoScroll`       | `boolean`                           | `true`      | Automatically scrolls the component into view.<br/>Can be helpful if the component is at the bottom a scrollable area and the dropdown ends up off-screen. |
-| `autoScrollCursor` | `boolean`                           | `true`      | Automatically scrolls to the cursor position in the list.<br/>Turn off if there are performance issues. |
-| `items`            | `() => Item[]`                      |             | Sets the suggestions. See [Items Property](#items-property). |
-| `isOpen`           | `boolean`                           | `false`     | Gets or sets whether the suggestions dropdown is open. |
-| `key`              | `any`                               | `null`      | Gets the last selected key. See [Items Property](#items-property). |
-| `value`            | `any`                               | `null`      | Gets the last selected value. See [Items Property](#items-property). |
-| `results`          | `any[]`                             | `[]`        | Gets the subset of `items` that match the user input, reduced to the first `maxItems` items. |
-| `search`           | `string`                            | `''`        | Gets or sets the current search term/input value. |
-| `isLoading`        | `boolean`                           | `false`     | Gets whether the component is currently loading the suggestions (if `items` returns a promise). |
-| `cursor`           | `number`                            | `0`         | Gets or sets the index of the currently highlighted item within the suggestions list. |
-| `cursorItem`       | `any`                               | `undefined` | Gets the currently highlighted item. |
-| `maxItems`         | `number?`                           | `undefined` | Sets the maximal number of items to show in suggestions list at a time. |
-| `fromStart`        | `boolean`                           | `false`     | Sets whether the search string has to appear at the start of the item. |
-| `caseSensitive`    | `boolean`                           | `false`     | Sets whether the search is case-sensitive. |
-| `minChar`          | `number`                            | `0`         | Sets the minimum number of characters required to trigger a search. |
-| `debounce`         | `number`                            | `0`         | Sets the time to wait in milliseconds before triggering a search. |
-| `blindSelection`   | `boolean`                           | `false`     | Sets whether suggested items are directly selected upon pressing arrow up/down while the dropdown is closed. |
-| `lazyDropdown`     | `boolean`                           | `false`     | Whether the DOM elements for the suggestions list are only created upon filtering/opening the suggestions dropdown. |
-| `searchRegEx`      | `(search: string) => RegExp | null` | `null`      | Custom search RegEx generator.<br/>If set, `fromStart` and `caseSensitive` will not be used. |
-| `searchFunction`   | Search Function                     | `null`      | Custom search function. See [Search Function Property](#search-function-property). |
+| Prop               | Type                                 | Default     | Description |
+|--------------------|--------------------------------------|-------------|-------------|
+| `id`               | `string \| null`                     | `null`      | Sets the `id` of the input element. |
+| `name`             | `string \| null`                     | `null`      | Sets the `name` of the input element. |
+| `className`        | `string`                             | `''`        | Sets additional class name/names of the input element (should be space separated). |
+| `placeholder`      | `string \| null`                     | `null`      | Sets the `placeholder` of the input element. |
+| `title`            | `string \| null`                     | `null`      | Sets the `title` of the input element. |
+| `required`         | `boolean`                            | `false`     | Sets the `required` attribute on the input element if `true`. |
+| `disabled`         | `boolean`                            | `false`     | Sets the `disabled` attribute on the input element if `true`. |
+| `autoScroll`       | `boolean`                            | `true`      | Automatically scrolls the component into view.<br/>Can be helpful if the component is at the bottom a scrollable area and the dropdown ends up off-screen. |
+| `autoScrollCursor` | `boolean`                            | `true`      | Automatically scrolls to the cursor position in the list.<br/>Turn off if there are performance issues. |
+| `items`            | `() => Item[]`                       |             | Sets the suggestions. See [Items Property](#items-property). |
+| `isOpen`           | `boolean`                            | `false`     | Gets or sets whether the suggestions dropdown is open. |
+| `key`              | `any`                                | `null`      | Gets the last selected key. See [Items Property](#items-property). |
+| `value`            | `any`                                | `null`      | Gets the last selected value. See [Items Property](#items-property). |
+| `results`          | `any[]`                              | `[]`        | Gets the subset of `items` that match the user input, reduced to the first `maxItems` items. |
+| `search`           | `string`                             | `''`        | Gets or sets the current search term/input value. |
+| `isLoading`        | `boolean`                            | `false`     | Gets whether the component is currently loading the suggestions (if `items` returns a promise). |
+| `cursor`           | `number`                             | `0`         | Gets or sets the index of the currently highlighted item within the suggestions list. |
+| `cursorItem`       | `any`                                | `undefined` | Gets the currently highlighted item. |
+| `maxItems`         | `number?`                            | `undefined` | Sets the maximal number of items to show in suggestions list at a time. |
+| `fromStart`        | `boolean`                            | `false`     | Sets whether the search string has to appear at the start of the item. |
+| `caseSensitive`    | `boolean`                            | `false`     | Sets whether the search is case-sensitive. |
+| `minChar`          | `number`                             | `0`         | Sets the minimum number of characters required to trigger a search. |
+| `debounce`         | `number`                             | `0`         | Sets the time to wait in milliseconds before triggering a search. |
+| `blindSelection`   | `boolean`                            | `false`     | Sets whether suggested items are directly selected upon pressing arrow up/down while the dropdown is closed. |
+| `lazyDropdown`     | `boolean`                            | `false`     | Whether the DOM elements for the suggestions list are only created upon filtering/opening the suggestions dropdown. |
+| `searchRegEx`      | `(search: string) => RegExp \| null` | `null`      | Custom search RegEx generator.<br/>If set, `fromStart` and `caseSensitive` will not be used. |
+| `searchFunction`   | Search Function                      | `null`      | Custom search function. See [Search Function Property](#search-function-property). |
 
 #### Items Property
 
