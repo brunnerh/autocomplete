@@ -5,13 +5,15 @@
     "author": "brunnerh",
     "license": "MIT",
     "svelte": "src/index.js",
+    "main": "dist/autocomplete.js",
     "scripts": {
-        "build": "rollup -c",
-        "autobuild": "rollup -c -w",
+        "build:prod": "rollup -c rollup.config.prod.js",
+        "build:dev": "rollup -c rollup.config.dev.js -w",
         "webserver": "sirv public --single --dev",
-        "dev": "run-p webserver autobuild",
+        "dev": "run-p webserver build:dev",
         "test": "npx nightwatch"
     },
+    "dependencies": {},
     "devDependencies": {
         "chromedriver": "^80.0.1",
         "nightwatch": "^1.3.4",
@@ -21,6 +23,7 @@
         "rollup-plugin-livereload": "^1.0.4",
         "rollup-plugin-node-resolve": "^5.2.0",
         "rollup-plugin-svelte": "^5.1.1",
+        "rollup-plugin-terser": "^5.2.0",
         "sirv-cli": "^0.4.5",
         "svelte": "^3.19.2"
     },

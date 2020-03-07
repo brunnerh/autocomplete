@@ -1,4 +1,6 @@
-public/components.js
+dist
+public/autocomplete.js
+public/bundle.js
 todo.md
 
 .DS_Store

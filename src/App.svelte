@@ -108,7 +108,7 @@
 		--ac-result-highlighted-background: #555;
 	}
 
-	div[title] {
+	:global(div[title]) {
 		border-bottom: 1px dashed #eee;
 	}
 
@@ -297,5 +297,35 @@
 				</div>
 			</AutoComplete>
 		</div>
+	</div>
+	
+	<hr/>
+
+	<h2>Component as ES Module</h2>
+
+	<div class="grid">
+		<div id="client-component-label">simple</div>
+		<div id="client-component"></div>
+
+		<script type="module" id="es-code">
+			import { AutoComplete as AC } from '/autocomplete.js';
+
+			const items = ['Apple', 'Orange', 'Pear'];
+
+			const ac = new AC({
+				target: document.querySelector('#client-component'),
+				props: {
+					items: () => items,
+					fromStart: false,
+				},
+			});
+
+			ac.$on('item-selected', e => alert(`Selected: ${e.detail}`));
+		</script>
+
+		<script>
+			document.querySelector('#client-component-label')
+				.setAttribute('title', document.querySelector('#es-code').textContent)
+		</script>
 	</div>
 </div>
