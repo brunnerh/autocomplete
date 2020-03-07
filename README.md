@@ -118,6 +118,20 @@ The type of the function is as follows:
 
 If set, `fromStart`, `caseSensitive` and `searchRegEx` will not be used.
 
+### Events
+
+The following events are emitted by the component, event data/forwarded event can be found in the `detail` property:
+
+| Type            | Description  |
+|-----------------|--------------|
+| `filtered`      | Fired after the suggestion list has been filtered. |
+| `item-selected` | Fired upon item selection, either by pressing Enter or clicking on one.<br/>The event data is the selected item. |
+| `focus`         | Forwarded from input. |
+| `blur`          | Forwarded from input. |
+| `input`         | Forwarded from input. |
+| `click`         | Forwarded from input. |
+
+
 ### Slots
 
 The following slots can be used in *Svelte* projects:

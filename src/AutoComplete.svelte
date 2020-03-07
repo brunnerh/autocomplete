@@ -185,8 +185,10 @@
 		}
 	};
 	
-	function onInput() {
+	function onInput(event) {
 		queueQuery();
+
+		dispatch(event.type, event);
 	}
 
 	function queueQuery() {
