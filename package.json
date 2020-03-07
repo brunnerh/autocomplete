@@ -6,6 +6,10 @@
     "license": "MIT",
     "svelte": "src/index.js",
     "main": "dist/autocomplete.js",
+    "homepage": "https://github.com/brunnerh/autocomplete",
+    "bugs": {
+        "url": "https://github.com/brunnerh/autocomplete/issues"
+    },
     "scripts": {
         "build:prod": "rollup -c rollup.config.prod.js",
         "watch:dev": "rollup -c rollup.config.dev.js -w",
