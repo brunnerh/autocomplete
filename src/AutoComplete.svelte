@@ -271,6 +271,8 @@
 				close();
 				break;
 		}
+
+		dispatch(event.type, event);
 	}
 
 	function onFocus(event) {

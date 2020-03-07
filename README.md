@@ -129,6 +129,7 @@ The following events are emitted by the component, event data/forwarded event ca
 | `focus`         | Forwarded from input. |
 | `blur`          | Forwarded from input. |
 | `input`         | Forwarded from input. |
+| `keydown`       | Forwarded from input. |
 | `click`         | Forwarded from input. |
 
 
