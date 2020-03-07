@@ -74,7 +74,7 @@
 	 * Sets whether suggested items are directly selected upon
 	 * arrow up/down while the dropdown is closed.
 	 */
-	export let blindSelection = true;
+	export let blindSelection = false;
 
 	/**
 	 * Whether the DOM elements for the list are only created
@@ -205,20 +205,19 @@
 
 	async function filterResults(search) {
 		hasSearched = true;
-		const searchText = search.toUpperCase();
 		const loadedItems = await items();
 		
 		const matcher = effectiveSearchFunction(search);
 
 		results = loadedItems
 			.filter(item => {
-				let text = item;
-				if (typeof item !== 'string')
-					text = item.key;
+				let text = typeof item === 'string' ?
+					item : item.key;
+
 				if (typeof text !== 'string')
 					text = '';
 
-				return matcher(item).matches;
+				return matcher(text).matches;
 			})
 			.slice(0, maxItems);
 
