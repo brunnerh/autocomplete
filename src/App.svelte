@@ -151,15 +151,13 @@
 	<div class="grid">
 		<div>Simple</div>
 		<AutoComplete
-			items={() => testData}
-			fromStart={false}/>
+			items={() => testData}/>
 
 		<div>
 			<label for="labeled">Labeled input (click this)</label>
 		</div>
 		<AutoComplete id="labeled"
-			items={() => testData}
-			fromStart={false}/>
+			items={() => testData}/>
 
 		<div>From start</div>
 		<AutoComplete
@@ -169,66 +167,56 @@
 		<div>Case sensitive</div>
 		<AutoComplete
 			items={() => testData}
-			caseSensitive={true}
-			fromStart={false}/>
+			caseSensitive={true}/>
 		
 		<div title={wholeWordRegex.toString()}>Custom regex (whole word)</div>
 		<AutoComplete
 			items={() => testData}
-			searchRegEx={wholeWordRegex}
-			fromStart={false}/>
+			searchRegEx={wholeWordRegex}/>
 
 		<div title={looseSearch.toString()}>Custom search (very loose)</div>
 		<AutoComplete
 			items={() => testData}
-			searchFunction={looseSearch}
-			fromStart={false}/>
+			searchFunction={looseSearch}/>
 
 		<div>Debounced</div>
 		<AutoComplete
 			items={() => testData}
-			debounce={300}
-			fromStart={false}/>
+			debounce={300}/>
 
 		<div>Initial search</div>
 		<AutoComplete
 			search={initalSearch}
-			items={() => testData}
-			fromStart={false}/>
+			items={() => testData}/>
 
 		<div>Lazy dropdown DOM</div>
 		<AutoComplete
 			items={() => testData}
-			lazyDropdown={true}
-			fromStart={false}/>
+			lazyDropdown={true}/>
 
 
 		<div>Max items = 10</div>
 		<AutoComplete
 			items={() => testData}
-			maxItems={10}
-			fromStart={false}/>
+			maxItems={10}/>
 
 		<div>Min char = 1</div>
 		<AutoComplete
 			items={() => testData}
-			minChar={1}
-			fromStart={false}/>
+			minChar={1}/>
 
 		<div>Item selected event</div>
 		<AutoComplete
 			items={() => testData}
-			on:item-selected={e => alert(e.detail)}
-			fromStart={false}/>
+			on:item-selected={e => alert(e.detail)}/>
 			
 		<div>Key/value bindings</div>
 		<div>
 			<div>key: {key}</div>
-			<div>value: {value}</div>
+			<div>value: {JSON.stringify(value)}</div>
 			<AutoComplete
 				items={() => testDataWithValue}
-				bind:key bind:value
-				fromStart={false}/>
+				bind:key bind:value/>
 		</div>
 
 		<div>Cursor and cursor item bindings</div>
@@ -237,39 +225,33 @@
 			<div class="json">cursorItem: {JSON.stringify(cursorItem)}</div>
 			<AutoComplete
 				items={() => testData}
-				bind:cursor bind:cursorItem
-				fromStart={false}/>
+				bind:cursor bind:cursorItem/>
 		</div>
 
 		<div>Disable cursor auto-scroll</div>
 		<AutoComplete
 			items={() => testData}
-			autoScrollCursor={false}
-			fromStart={false}/>
+			autoScrollCursor={false}/>
 
 		<div>Async, cached</div>
 		<AutoComplete
-			items={delayedDataCached}
-			fromStart={false}/>
+			items={delayedDataCached}/>
 
 		<div>Async, uncached, debounced</div>
 		<AutoComplete
 			items={delayedData}
-			debounce={300}
-			fromStart={false}/>
+			debounce={300}/>
 
 		<div>Async, initial search</div>
 		<AutoComplete
 			search={initalSearch}
-			items={delayedData}
-			fromStart={false}/>
+			items={delayedData}/>
 
 		<div>Theming</div>
 		<div class="theming">
 			<AutoComplete
 				items={() => testData}
-				search={initalSearch}
-				fromStart={false}/>
+				search={initalSearch}/>
 		</div>
 	</div>
 
@@ -286,8 +268,7 @@
 		<div>
 			<AutoComplete
 				items={delayedData}
-				search={initalSearch}
-				fromStart={false}>
+				search={initalSearch}>
 				<div slot="loading" style="color: hsl(300, 100%, 85%)">
 					[loading, 1, 2, 3...]
 				</div>
@@ -298,8 +279,7 @@
 		<div>
 			<AutoComplete let:result
 				items={() => testDataWithValue}
-				search={initalSearch}
-				fromStart={false}>
+				search={initalSearch}>
 				<div slot="template">
 					<span style="color: hsl(120, 100%, 70%)">{result.index + 1}</span>:
 					{@html result.label}
@@ -315,7 +295,7 @@
 	<h2>Component as ES Module</h2>
 
 	<p>
-		See "Client-side component API" in the <a href="https://svelte.dev/docs">Svelte docs.</a>
+		See <a href="https://svelte.dev/docs#Client-side_component_API">Client-side component API</a> in the Svelte docs.
 	</p>
 
 	<div class="grid">

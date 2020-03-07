@@ -11,13 +11,11 @@
 	/** `id` attribute of the input element. */
 	export let id = null;
 	/** `name` attribute of the input element. */
-	export let name = '';
-	/** Currently selected value. See `items` property. */
-	export let value = '';
-	/** Currently selected key. See `items` property. */
-	export let key = '';
+	export let name = null;
+	/** Class to apply to the input element. */
+	export let className = '';
 	/** Placeholder text. */
-	export let placeholder = '';
+	export let placeholder = null;
 	/** Title attribute text. */
 	export let title = null;
 	/** Whether the input is required. */
@@ -39,9 +37,9 @@
 	/**
 	 * Gets a list of items that can be completed.
 	 * Can return a promise to load data asynchronously.
-	 * Returning an existing promise if list can be cached is recommended.
+	 * Returning an existing promise if the list can be cached is recommended.
 	 * 
-	 * Items have to be strings or of the form { key: string, value: string }.
+	 * Items have to be strings or of the form { key: string, value?: any }.
 	 * The key will be searched in and displayed.
 	 * The value represents a technical item value that can be extracted via binding
 	 * the `value` property.
@@ -50,6 +48,10 @@
 
 	/** Whether the item dropdown is opened. */
 	export let isOpen = false;
+	/** Currently selected key. See `items` property. */
+	export let key = null;
+	/** Currently selected value. See `items` property. */
+	export let value = null;
 	/** Items matching the search. */
 	export let results = [];
 	/** The search string. */
@@ -60,14 +62,12 @@
 	export let cursor = 0;
 	/** Currently highlighted list item. */
 	export let cursorItem = undefined;
-	/** Maximum number of items to show in list at a time. */
+	/** Maximal number of items to show in list at a time. */
 	export let maxItems = undefined;
 	/** Whether the search string has to appear at the start of the item. */
-	export let fromStart = true;
-	/** Whether the search is case sensitive. */
+	export let fromStart = false;
+	/** Whether the search is case-sensitive. */
 	export let caseSensitive = false;
-	/** Class to apply to the input element. */
-	export let className = '';
 	/** Minimum number of characters required to trigger a search. */
 	export let minChar = 0;
 	/** Time to wait in milliseconds before triggering a search. */
@@ -133,7 +133,7 @@
 				for (const [start, end] of highlights) {
 					const head = text.substring(lastHighlightEnd, start);
 					const highlightText = text.substring(start, end);
-					const highlightClass = 'autocomplete-result-match';
+					const highlightClass = 'ac-match';
 					const highlight = `<span class=${highlightClass}>${htmlEscape(highlightText)}</span>`;
 
 					parts.push(htmlEscape(head), highlight);
@@ -207,6 +207,10 @@
 
 	async function filterResults(search) {
 		hasSearched = true;
+
+		if (typeof items != 'function')
+			throw new Error('Property "items" has to be a function.');
+
 		const loadedItems = await items();
 		
 		const matcher = effectiveSearchFunction(search);
@@ -429,7 +433,11 @@
 		box-sizing: border-box;
 	}
 
-	input {
+	.autocomplete {
+		position: relative;
+	}
+
+	.autocomplete-input {
 		width: 100%;
 		color: var(--ac-input-color);
 		background: var(--ac-input-background);
@@ -439,21 +447,6 @@
 		margin: var(--ac-input-margin);
 		font-size: var(--ac-input-font-size);
 		font-weight: var(--ac-input-font-weight);
-	}
-
-	.autocomplete {
-		position: relative;
-	}
-
-	.hidden {
-		display: none;
-	}
-
-	.autocomplete-loading {
-		color: var(--ac-loading-color);
-		background: var(--ac-loading-background);
-		padding: var(--ac-loading-padding);
-		margin: var(--ac-loading-margin);
 	}
 
 	.autocomplete-results-dropdown {
@@ -469,6 +462,17 @@
 		margin: var(--ac-dropdown-margin);
 		padding: var(--ac-dropdown-padding);
 		border-radius: var(--ac-dropdown-border-radius);
+	}
+
+	.hidden {
+		display: none;
+	}
+
+	.autocomplete-loading {
+		color: var(--ac-loading-color);
+		background: var(--ac-loading-background);
+		padding: var(--ac-loading-padding);
+		margin: var(--ac-loading-margin);
 	}
 
 	.autocomplete-results-list {
@@ -490,7 +494,7 @@
 		white-space: nowrap;
 	}
 
-	.autocomplete-result.highlighted {
+	.autocomplete-result.ac-highlighted {
 		color: var(--ac-result-highlighted-color, var(--ac-result-color));
 		background: var(--ac-result-highlighted-background, var(--ac-result-background));
 		border: var(--ac-result-highlighted-border, var(--ac-result-border));
@@ -499,7 +503,7 @@
 		border-radius: var(--ac-result-highlighted-border-radius, var(--ac-result-border-radius));
 	}
 
-	.autocomplete-result :global(.autocomplete-result-match) {
+	.autocomplete-result :global(.ac-match) {
 		color: var(--ac-result-match-color);
 		background: var(--ac-result-match-background);
 		font-weight: var(--ac-result-match-font-weight);
@@ -541,11 +545,12 @@
 				</div>
 			{/if}
 
-			<ul class="autocomplete-results-list">
+			<ul class="autocomplete-results-list"
+				class:hidden={isLoading}>
 				{#each resultListItems as result, index (result.key)}
 					<li on:mousedown={e => onItemClick(e, index)}
 						class="autocomplete-result"
-						class:highlighted={index === cursor}
+						class:ac-highlighted={index === cursor}
 						on:mousemove={() => cursor = index}
 						use:autoScrollItem={{
 							viewport: () => dropdownElement,
