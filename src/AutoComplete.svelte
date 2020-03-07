@@ -28,6 +28,11 @@
 	 * and the dropdown ends up off-screen.
 	 */
 	export let autoScroll = true;
+	/**
+	 * Automatically scrolls to the cursor position in the list.
+	 * Turn off if there are performance issues.
+	 */
+	export let autoScrollCursor = true;
 
 	/**
 	 * Gets a list of items that can be completed.
@@ -205,14 +210,19 @@
 		
 		const matcher = effectiveSearchFunction(search);
 
-		results = loadedItems.filter(item => {
-			if (typeof item !== 'string') {
-				item = item.key || '' // Silent fail
-			}
+		results = loadedItems
+			.filter(item => {
+				let text = item;
+				if (typeof item !== 'string')
+					text = item.key;
+				if (typeof text !== 'string')
+					text = '';
 
-			return matcher(item).matches;
-		})
-		.slice(0, maxItems);
+				return matcher(item).matches;
+			})
+			.slice(0, maxItems);
+
+		dispatch('filtered', results);
 	}
 
 	function onKeyDown(event) {
@@ -540,7 +550,7 @@
 						on:mousemove={() => cursor = index}
 						use:autoScrollItem={{
 							viewport: () => dropdownElement,
-							condition: () => index === cursor,
+							condition: () => autoScrollCursor && index === cursor,
 							isOpen,
 						}}>
 						<slot name="template" {result}>

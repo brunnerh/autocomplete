@@ -227,12 +227,18 @@
 		<div>Cursor and cursor item bindings</div>
 		<div>
 			<div>cursor: {cursor}</div>
-			<div class="json">cursorItem: {JSON.stringify(cursorItem, 0, 4)}</div>
+			<div class="json">cursorItem: {JSON.stringify(cursorItem)}</div>
 			<AutoComplete
-				items={() => testDataWithValue}
+				items={() => testData}
 				bind:cursor bind:cursorItem
 				fromStart={false}/>
 		</div>
+
+		<div>Disable cursor auto-scroll</div>
+		<AutoComplete
+			items={() => testData}
+			autoScrollCursor={false}
+			fromStart={false}/>
 
 		<div>Async, cached</div>
 		<AutoComplete
