@@ -1,8 +1,5 @@
-// for testing
-import App from './App.svelte'
+import TestApp from './TestApp.svelte'
 
-const app = new App({
-    target: document.body,
-})
+const app = new TestApp({ target: document.body })
 
 export default app
