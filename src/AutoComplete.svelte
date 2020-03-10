@@ -22,6 +22,8 @@
 	export let required = false;
 	/** Whether the input is disabled. */
 	export let disabled = false;
+	/** Sets the `tabindex` attribute of the input element. */
+	export let tabindex = undefined;
 	/**
 	 * Automatically scrolls the component into view.
 	 * Can be helpful if the component is at the bottom a scrollable area
@@ -399,7 +401,7 @@
 	:global(:root) {
 		--ac-input-color: black;
 		--ac-input-background: white;
-		--ac-input-border: none;
+		--ac-input-border: 1px solid hsl(0, 0%, 60%);
 		--ac-input-border-radius: 0;
 		--ac-input-padding: 3px;
 		--ac-input-margin: 0;
@@ -530,7 +532,7 @@
 		{id} {name}
 		class="autocomplete-input {className}"
 		{placeholder} {title}
-		{required} {disabled}
+		{required} {disabled} {tabindex}
 		autocomplete={name}
 		bind:value={search}
 		on:input={onInput}

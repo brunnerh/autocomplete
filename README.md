@@ -2,7 +2,9 @@
 
 An autocomplete component which can be used as a regular ES module import or as a [*Svelte*][svelte] component.
 
-It has no dependencies, handles synchronous and asynchronous data sources and escapes any HTML automatically.
+It has no dependencies, handles synchronous and asynchronous data sources, supports item templating and escapes any HTML automatically.
+
+([Change log][changelog])
 
 ## Install
 
@@ -54,6 +56,7 @@ For documentation of how to interact with component instances see [Client-side c
 | `title`            | `string \| null`                     | `null`      | Sets the `title` of the input element. |
 | `required`         | `boolean`                            | `false`     | Sets the `required` attribute on the input element if `true`. |
 | `disabled`         | `boolean`                            | `false`     | Sets the `disabled` attribute on the input element if `true`. |
+| `tabindex`         | `number \| undefined`                | `undefined` | Sets the `tabindex` attribute on the input element. |
 | `autoScroll`       | `boolean`                            | `true`      | Automatically scrolls the component into view.<br/>Can be helpful if the component is at the bottom a scrollable area and the dropdown ends up off-screen. |
 | `autoScrollCursor` | `boolean`                            | `true`      | Automatically scrolls to the cursor position in the list.<br/>Turn off if there are performance issues. |
 | `items`            | `() => Item[]`                       |             | Sets the suggestions. See [Items Property](#items-property). |
@@ -211,7 +214,7 @@ It can also be styled via the classes of the various parts.
 |---------------------------------------|-----------------------------------------|---------------|
 | `.autocomplete-input`                 | `--ac-input-color`                      | `black` |
 | `.autocomplete-input`                 | `--ac-input-background`                 | `white` |
-| `.autocomplete-input`                 | `--ac-input-border`                     | `none` |
+| `.autocomplete-input`                 | `--ac-input-border`                     | `1px solid hsl(0, 0%, 60%)` |
 | `.autocomplete-input`                 | `--ac-input-border-radius`              | `0` |
 | `.autocomplete-input`                 | `--ac-input-padding`                    | `3px` |
 | `.autocomplete-input`                 | `--ac-input-margin`                     | `0` |
@@ -250,6 +253,7 @@ It can also be styled via the classes of the various parts.
 - [patoi/svelte-component-library-template][1] ([License][1l]) - Repo built on template.
 - [elcobvg/svelte-autocomplete][2] ([License][2l]) - Original code-base.
 
+ [changelog]: https://github.com/brunnerh/autocomplete/blob/master/CHANGELOG.md
  [svelte]: https://svelte.dev/
  [client-side-api]: https://svelte.dev/docs#Client-side_component_API
  [1]: https://github.com/patoi/svelte-component-library-template

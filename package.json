@@ -1,7 +1,7 @@
 {
     "name": "@brunnerh/autocomplete",
-    "version": "0.1.1",
-    "description": "A autocomplete component.",
+    "version": "0.1.2",
+    "description": "An autocomplete component.",
     "author": "brunnerh",
     "license": "MIT",
     "svelte": "src/index.js",
