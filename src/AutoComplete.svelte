@@ -1,40 +1,41 @@
-<script>
+<script type="text/typescript">
 	import { createEventDispatcher, onDestroy, tick } from 'svelte';
+	import type { Item, SearchFunction, ResultListItem } from './types';
 	
 	const dispatch = createEventDispatcher();
 
-	const regExpEscape = s =>
+	const regExpEscape = (s: string) =>
 		s.replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&");
-	const htmlEscape = s =>
+	const htmlEscape = (s: string) =>
 		s.replace(/[\u00A0-\u9999<>"&]/gim, i => `&#${i.charCodeAt(0)};`);
 
 	/** `id` attribute of the input element. */
-	export let id = null;
+	export let id: string | undefined = undefined;
 	/** `name` attribute of the input element. */
-	export let name = null;
+	export let name: string | undefined = undefined;
 	/** Class to apply to the input element. */
-	export let className = '';
+	export let className: string = '';
 	/** Placeholder text. */
-	export let placeholder = null;
+	export let placeholder: string | undefined = undefined;
 	/** Title attribute text. */
-	export let title = null;
+	export let title: string | undefined = undefined;
 	/** Whether the input is required. */
-	export let required = false;
+	export let required: boolean = false;
 	/** Whether the input is disabled. */
-	export let disabled = false;
+	export let disabled: boolean = false;
 	/** Sets the `tabindex` attribute of the input element. */
-	export let tabindex = undefined;
+	export let tabindex: number | undefined = undefined;
 	/**
 	 * Automatically scrolls the component into view.
 	 * Can be helpful if the component is at the bottom a scrollable area
 	 * and the dropdown ends up off-screen.
 	 */
-	export let autoScroll = true;
+	export let autoScroll: boolean = true;
 	/**
 	 * Automatically scrolls to the cursor position in the list.
 	 * Turn off if there are performance issues.
 	 */
-	export let autoScrollCursor = true;
+	export let autoScrollCursor: boolean = true;
 
 	/**
 	 * Gets a list of items that can be completed.
@@ -46,52 +47,51 @@
 	 * The value represents a technical item value that can be extracted via binding
 	 * the `value` property.
 	 */
-	export let items = () => [];
+	export let items: () => Item[] = () => [];
 
 	/** Whether the item dropdown is opened. */
-	export let isOpen = false;
+	export let isOpen: boolean = false;
 	/** Currently selected key. See `items` property. */
-	export let key = null;
+	export let key: string | null = null;
 	/** Currently selected value. See `items` property. */
-	export let value = null;
+	export let value: any = null;
 	/** Items matching the search. */
-	export let results = [];
+	export let results: Item[] = [];
 	/** The search string. */
-	export let search = '';
+	export let search: string = '';
 	/** Whether the datasource is currently loading. */
-	export let isLoading = false;
+	export let isLoading: boolean = false;
 	/** Currently highlighted list item index. */
-	export let cursor = 0;
+	export let cursor: number = 0;
 	/** Currently highlighted list item. */
-	export let cursorItem = undefined;
+	export let cursorItem: any = undefined;
 	/** Maximal number of items to show in list at a time. */
-	export let maxItems = undefined;
+	export let maxItems: number | undefined = undefined;
 	/** Whether the search string has to appear at the start of the item. */
-	export let fromStart = false;
+	export let fromStart: boolean = false;
 	/** Whether the search is case-sensitive. */
-	export let caseSensitive = false;
+	export let caseSensitive: boolean = false;
 	/** Minimum number of characters required to trigger a search. */
-	export let minChar = 0;
+	export let minChar: number = 0;
 	/** Time to wait in milliseconds before triggering a search. */
-	export let debounce = 0;
+	export let debounce: number = 0;
 	/**
 	 * Sets whether suggested items are directly selected upon
 	 * arrow up/down while the dropdown is closed.
 	 */
-	export let blindSelection = false;
+	export let blindSelection: boolean = false;
 
 	/**
 	 * Whether the DOM elements for the list are only created
 	 * upon filtering/opening the suggestions dropdown.
 	 */
-	export let lazyDropdown = false;
+	export let lazyDropdown: boolean = false;
 
 	/**
 	 * Custom search RegEx.
 	 * If set, `fromStart` and `caseSensitive` will not be used.
-	 * {@type (search: string) => RegExp}
 	 */
-	export let searchRegEx = null;
+	export let searchRegEx: ((search: string) => RegExp) | null = null;
 
 	/**
 	 * Custom search function.
@@ -101,20 +101,20 @@
 	 *     highlights: [number, number][], // Array of start and end index tuples
 	 * }}
 	 */
-	export let searchFunction = null;
+	export let searchFunction: SearchFunction | null = null;
 
-	let input = null;
+	let input: HTMLInputElement | null = null;
 	let inputFocused = false;
-	let dropdownElement = null;
+	let dropdownElement: HTMLDivElement | null = null;
 	let hasSearched = false;
 
-	let resultListItems = [];
+	let resultListItems: ResultListItem[] = [];
 
 	$: searchFlags = caseSensitive ? '' : 'i';
 	$: effectiveSearchRegEx = searchRegEx != null ? searchRegEx
 		: fromStart
-			? q => RegExp('^' + regExpEscape(q), searchFlags)
-			: q => RegExp(regExpEscape(q), searchFlags);
+			? (q: string) => RegExp('^' + regExpEscape(q), searchFlags)
+			: (q: string) => RegExp(regExpEscape(q), searchFlags);
 	$: effectiveSearchFunction = searchFunction != null
 		? searchFunction : defaultSearch;
 
@@ -148,7 +148,7 @@
 				return {
 					index,
 					key: text,
-					value: item.value || item,
+					value: typeof item !== 'string' ? item.value : item,
 					label: parts.join(''),
 				};
 			});
@@ -156,14 +156,14 @@
 
 	$: cursorItem = results[cursor];
 
-	let debounceHandle = undefined;
+	let debounceHandle: number | undefined = undefined;
 
 	onDestroy(() => clearTimeout(debounceHandle));
 
-	const defaultSearch = query => {
+	const defaultSearch = (query: string) => {
 		const regex = effectiveSearchRegEx(query);
 
-		return text => {
+		return (text: string) => {
 			const highlights = [];
 
 			let match;
@@ -187,7 +187,7 @@
 		}
 	};
 	
-	function onInput(event) {
+	function onInput(event: Event) {
 		queueQuery();
 
 		dispatch(event.type, event);
@@ -196,7 +196,7 @@
 	function queueQuery() {
 		if (search.length >= minChar) {
 			clearTimeout(debounceHandle);
-			debounceHandle = setTimeout(runQuery, debounce);
+			debounceHandle = window.setTimeout(runQuery, debounce);
 		}
 	}
 
@@ -209,7 +209,7 @@
 		isLoading = false;
 	}
 
-	async function filterResults(search) {
+	async function filterResults(search: string) {
 		hasSearched = true;
 
 		if (typeof items != 'function')
@@ -234,7 +234,7 @@
 		dispatch('filtered', results);
 	}
 
-	function onKeyDown(event) {
+	function onKeyDown(event: KeyboardEvent) {
 		switch (event.key)
 		{
 			case 'ArrowDown':
@@ -243,7 +243,7 @@
 					cursor = cursor + 1;
 
 				if (blindSelection && isOpen == false)
-					select(cursor);
+					select();
 				break;
 
 			case 'ArrowUp':
@@ -252,7 +252,7 @@
 					cursor =  cursor - 1;
 
 				if (blindSelection && isOpen == false)
-					select(cursor);
+					select();
 				break;
 
 			case 'Enter':
@@ -261,7 +261,7 @@
 					if (cursor === -1) {
 						cursor = 0;
 					}
-					select(cursor);
+					select();
 				}
 				else {
 					activate();
@@ -277,21 +277,21 @@
 		dispatch(event.type, event);
 	}
 
-	function onFocus(event) {
+	function onFocus(event: FocusEvent) {
 		inputFocused = true;
 		activate();
 
 		dispatch(event.type, event);
 	}
 
-	function onBlur(event) {
+	function onBlur(event: FocusEvent) {
 		inputFocused = false;
 		isOpen = false;
 
 		dispatch(event.type, event);
 	}
 
-	function onClick(event) {
+	function onClick(event: MouseEvent) {
 		activate();
 
 		dispatch(event.type, event);
@@ -305,7 +305,7 @@
 			queueQuery();
 	}
 
-	function onItemClick(event, index) {
+	function onItemClick(event: MouseEvent, index: number) {
 		event.stopPropagation();
 		cursor = index;
 
@@ -343,12 +343,15 @@
 		dispatch('item-selected', results[cursor]);
 	}
 
-	function autoScrollComponent(node, { condition, dropdown }) {
+	function autoScrollComponent(
+		node: HTMLElement, { condition, dropdown }: AutoScrollParameters
+	) {
 		const autoScroll = () => {
 			if (condition() == false)
 				return;
 
 			const scrollFunction = 'scrollIntoViewIfNeeded' in Element.prototype
+				// @ts-ignore
 				? Element.prototype.scrollIntoViewIfNeeded
 				: Element.prototype.scrollIntoView;
 
@@ -370,7 +373,9 @@
 		} 
 	}
 
-	function autoScrollItem(node, { viewport, condition }) {
+	function autoScrollItem(
+		node: HTMLElement, { condition, viewport }: AutoScrollItemParameters
+	) {
 		const autoScroll = () => {
 			const viewportNode = viewport();
 			if (viewportNode == null || condition() == false)
@@ -394,6 +399,18 @@
 				autoScroll();
 			}
 		} 
+	}
+
+	interface AutoScrollParameters
+	{
+		condition: () => boolean;
+		dropdown: () => HTMLElement | null;
+	}
+
+	interface AutoScrollItemParameters
+	{
+		condition: () => boolean;
+		viewport: () => HTMLElement | null;
 	}
 </script>
 

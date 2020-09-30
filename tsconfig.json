@@ -1,0 +1,10 @@
+{
+	"extends": "@tsconfig/svelte/tsconfig.json",
+	"include": ["src/**/*"],
+	"compilerOptions": {
+		"strict": true,
+		"outDir": "dist",
+		"rootDir": "src",
+		"declaration": true,
+	}
+}

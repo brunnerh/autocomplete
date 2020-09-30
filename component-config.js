@@ -1,6 +1,8 @@
 import svelte from 'rollup-plugin-svelte'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
+import autoPreprocess from 'svelte-preprocess';
+import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
 
 /**
@@ -11,15 +13,19 @@ import { terser } from 'rollup-plugin-terser';
 export function componentConfig(outputDirectory, minify)
 {
 	return {
-		input: 'src/index.js',
+		input: 'src/index.ts',
 		output: {
 			file: `${outputDirectory}/autocomplete${minify ? '.min' : ''}.js`,
 			format: 'es',
 			name: 'autocomplete',
 		},
 		plugins: [
+			typescript({
+				
+			}),
 			svelte({
 				include: 'src/**/*.svelte',
+				preprocess: autoPreprocess(),
 			}),
 			resolve(),
 			commonjs(),
