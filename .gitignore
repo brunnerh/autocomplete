@@ -1,6 +1,5 @@
 dist
-public/autocomplete.js
-public/bundle.js
+public
 todo.md
 
 .DS_Store

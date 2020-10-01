@@ -3,8 +3,8 @@
 	"include": ["src/**/*"],
 	"compilerOptions": {
 		"strict": true,
+		"target": "ES6",
 		"outDir": "dist",
 		"rootDir": "src",
-		"declaration": true,
 	}
 }
